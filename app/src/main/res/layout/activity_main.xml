@@ -13,6 +13,7 @@
         android:layout_alignParentRight="true"
         android:layout_alignParentBottom="true"
         android:layout_margin="16dp"
+        app:src="@drawable/ic_favorite_black_24dp"
         app:useMini="false"></com.ayush.awesomefab.AwesomeFab>
 
     <com.ayush.awesomefab.AwesomeFab
@@ -22,5 +23,6 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentBottom="true"
         android:layout_margin="16dp"
+        app:fabColor="#00ff00"
         app:useMini="true"></com.ayush.awesomefab.AwesomeFab>
 </RelativeLayout>

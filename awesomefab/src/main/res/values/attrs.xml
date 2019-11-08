@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <declare-styleable name="AwesomeFab">
-        <attr name="useMini" format="boolean" />
+        <attr name="useMini" format="boolean"></attr>
+        <attr name="fabColor" format="color"></attr>
+        <attr name="src" format="reference"></attr>
     </declare-styleable>
 </resources>
