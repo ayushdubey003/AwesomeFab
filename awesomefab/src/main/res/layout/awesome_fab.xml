@@ -10,6 +10,11 @@
         android:layout_width="56dp"
         android:layout_height="56dp"
         android:background="@drawable/background"
+        android:clickable="true"
+        android:elevation="6dp"
+        android:focusable="true"
+        android:foreground="?attr/selectableItemBackgroundBorderless"
+        android:hapticFeedbackEnabled="true"
         android:padding="16dp"
         android:src="@drawable/ic_remove_black_24dp"></ImageView>
 </LinearLayout>
