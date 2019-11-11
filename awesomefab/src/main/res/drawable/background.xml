@@ -2,12 +2,15 @@
 <shape xmlns:android="http://schemas.android.com/apk/res/android"
     android:shape="oval">
 
+    <size
+        android:width="56dp"
+        android:height="56dp" />
+
+
     <gradient
         android:angle="135"
         android:endColor="#3387E5"
         android:startColor="#3387E5"
         android:type="linear" />
-
-    <corners android:radius="56dp" />
 
 </shape>

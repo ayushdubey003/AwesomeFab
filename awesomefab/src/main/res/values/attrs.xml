@@ -3,6 +3,8 @@
     <declare-styleable name="AwesomeFab">
         <attr name="useMini" format="boolean"></attr>
         <attr name="fabColor" format="color"></attr>
-        <attr name="src" format="reference"></attr>
+        <attr name="beforeClickSrc" format="reference"></attr>
+        <attr name="afterClickSrc" format="reference"></attr>
+        <attr name="rippleColor" format="color"></attr>
     </declare-styleable>
 </resources>

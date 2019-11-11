@@ -15,19 +15,25 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
+import android.widget.Toast;
 
-public class AwesomeFab extends LinearLayout {
+public class AwesomeFab extends RelativeLayout implements View.OnClickListener {
 
     private Context mContext;
     private AttributeSet mAttributeSet;
     private int mStyleAttr;
     private ImageView mView;
+    private ImageView mSrc;
     private GradientDrawable mCircle;
     private final String LOG_TAG = "AwesomeFab";
     private boolean mUseMini;
-    private LinearLayout mLinearLayout;
+    private RelativeLayout mRelativeLayout;
     private int mFabcolor;
-    private Drawable mDrawable;
+    private Drawable mBeforeDrawable;
+    private Drawable mAfterDrawable;
+    private int mRippleColor;
+    private com.balysv.materialripple.MaterialRippleLayout mRipple;
 
     public AwesomeFab(Context context) {
         super(context);
@@ -52,52 +58,78 @@ public class AwesomeFab extends LinearLayout {
 
 
     private void initialize() {
-        this.mLinearLayout = this;
-        inflate(mContext, R.layout.awesome_fab, mLinearLayout);
-
-        TypedArray typedArray = mContext.obtainStyledAttributes(mAttributeSet, R.styleable.AwesomeFab, mStyleAttr, 0);
-        mUseMini = typedArray.getBoolean(R.styleable.AwesomeFab_useMini, false);
-        mFabcolor = typedArray.getColor(R.styleable.AwesomeFab_fabColor, 0x0);
-        mDrawable = typedArray.getDrawable(R.styleable.AwesomeFab_src);
+        this.mRelativeLayout = this;
+        inflate(mContext, R.layout.awesome_fab, mRelativeLayout);
+        initInstanceVariables();
+        setUpFab();
         ViewGroup.LayoutParams layoutParams;
 
-        mView = findViewById(R.id.view);
-        mLinearLayout = findViewById(R.id.linear_layout);
+        mView.setOnClickListener(this);
+        if (mSrc != null)
+            mSrc.setOnClickListener(this);
+
         if (mUseMini) {
             int px = (int) convertDpToPixel(40, mContext);
-            int pad = (int) convertDpToPixel(8, mContext);
-            layoutParams = mLinearLayout.getLayoutParams();
+            layoutParams = mRelativeLayout.getLayoutParams();
             layoutParams.height = px;
             layoutParams.width = px;
-            mLinearLayout.setLayoutParams(layoutParams);
+            mRelativeLayout.setLayoutParams(layoutParams);
 
             layoutParams = mView.getLayoutParams();
             layoutParams.height = px;
             layoutParams.width = px;
-            mView.setPadding(pad, pad, pad, pad);
-            mView.setImageDrawable(mDrawable);
 
             GradientDrawable g = new GradientDrawable(GradientDrawable.Orientation.TL_BR, new int[]{mFabcolor, mFabcolor, mFabcolor});
             g.setGradientType(GradientDrawable.LINEAR_GRADIENT);
             g.setCornerRadius(px * 1.0f);
-            mView.setBackground(g);
+            mView.setImageDrawable(g);
         } else {
             int px = (int) convertDpToPixel(56, mContext);
-            layoutParams = mLinearLayout.getLayoutParams();
+            layoutParams = mRelativeLayout.getLayoutParams();
             layoutParams.height = px;
             layoutParams.width = px;
-            mLinearLayout.setLayoutParams(layoutParams);
+            mRelativeLayout.setLayoutParams(layoutParams);
 
             layoutParams = mView.getLayoutParams();
             layoutParams.height = px;
             layoutParams.width = px;
+
             mView.setLayoutParams(layoutParams);
-            mView.setImageDrawable(mDrawable);
+            GradientDrawable g = new GradientDrawable(GradientDrawable.Orientation.TL_BR, new int[]{mFabcolor, mFabcolor, mFabcolor});
+            g.setGradientType(GradientDrawable.LINEAR_GRADIENT);
+            g.setCornerRadius(px * 1.0f);
+            mView.setImageDrawable(g);
         }
-        typedArray.recycle();
+
     }
 
     public static float convertDpToPixel(float dp, Context context) {
         return dp * ((float) context.getResources().getDisplayMetrics().densityDpi / DisplayMetrics.DENSITY_DEFAULT);
     }
+
+    private void initInstanceVariables() {
+        mView = findViewById(R.id.view);
+        mRelativeLayout = findViewById(R.id.relative_layout);
+        mSrc = findViewById(R.id.source_drawable);
+        mRipple = findViewById(R.id.ripple);
+    }
+
+    private void setUpFab() {
+        TypedArray typedArray = mContext.obtainStyledAttributes(mAttributeSet, R.styleable.AwesomeFab, mStyleAttr, 0);
+        mUseMini = typedArray.getBoolean(R.styleable.AwesomeFab_useMini, false);
+        mFabcolor = typedArray.getColor(R.styleable.AwesomeFab_fabColor, 0x0);
+        mRippleColor = typedArray.getColor(R.styleable.AwesomeFab_rippleColor, 0x42f);
+        mBeforeDrawable = typedArray.getDrawable(R.styleable.AwesomeFab_beforeClickSrc);
+        mAfterDrawable = typedArray.getDrawable(R.styleable.AwesomeFab_afterClickSrc);
+
+        mRipple.setRippleColor(mRippleColor);
+        mSrc.setImageDrawable(mBeforeDrawable);
+        typedArray.recycle();
+    }
+
+    @Override
+    public void onClick(View view) {
+        mSrc.setImageDrawable(mAfterDrawable);
+    }
+
 }
