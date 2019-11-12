@@ -34,6 +34,8 @@ public class AwesomeFab extends RelativeLayout implements View.OnClickListener {
     private Drawable mAfterDrawable;
     private int mRippleColor;
     private com.balysv.materialripple.MaterialRippleLayout mRipple;
+    private ImageView mShadow;
+    private int mShadowColor;
 
     public AwesomeFab(Context context) {
         super(context);
@@ -69,11 +71,22 @@ public class AwesomeFab extends RelativeLayout implements View.OnClickListener {
             mSrc.setOnClickListener(this);
 
         if (mUseMini) {
-            int px = (int) convertDpToPixel(40, mContext);
+            int px = (int) convertDpToPixel(42, mContext);
             layoutParams = mRelativeLayout.getLayoutParams();
             layoutParams.height = px;
             layoutParams.width = px;
             mRelativeLayout.setLayoutParams(layoutParams);
+
+            layoutParams = mShadow.getLayoutParams();
+            layoutParams.height = px;
+            layoutParams.width = px;
+            mShadow.setLayoutParams(layoutParams);
+
+            px = (int) convertDpToPixel(40, mContext);
+
+            layoutParams = mRipple.getLayoutParams();
+            layoutParams.height = px;
+            layoutParams.width = px;
 
             layoutParams = mView.getLayoutParams();
             layoutParams.height = px;
@@ -84,12 +97,18 @@ public class AwesomeFab extends RelativeLayout implements View.OnClickListener {
             g.setCornerRadius(px * 1.0f);
             mView.setImageDrawable(g);
         } else {
-            int px = (int) convertDpToPixel(56, mContext);
+            int px = (int) convertDpToPixel(58, mContext);
             layoutParams = mRelativeLayout.getLayoutParams();
             layoutParams.height = px;
             layoutParams.width = px;
             mRelativeLayout.setLayoutParams(layoutParams);
 
+            layoutParams = mShadow.getLayoutParams();
+            layoutParams.height = px;
+            layoutParams.width = px;
+            mShadow.setLayoutParams(layoutParams);
+
+            px = (int) convertDpToPixel(56, mContext);
             layoutParams = mView.getLayoutParams();
             layoutParams.height = px;
             layoutParams.width = px;
@@ -112,6 +131,7 @@ public class AwesomeFab extends RelativeLayout implements View.OnClickListener {
         mRelativeLayout = findViewById(R.id.relative_layout);
         mSrc = findViewById(R.id.source_drawable);
         mRipple = findViewById(R.id.ripple);
+        mShadow = findViewById(R.id.shadow);
     }
 
     private void setUpFab() {
@@ -121,9 +141,11 @@ public class AwesomeFab extends RelativeLayout implements View.OnClickListener {
         mRippleColor = typedArray.getColor(R.styleable.AwesomeFab_rippleColor, 0x42f);
         mBeforeDrawable = typedArray.getDrawable(R.styleable.AwesomeFab_beforeClickSrc);
         mAfterDrawable = typedArray.getDrawable(R.styleable.AwesomeFab_afterClickSrc);
+        mShadowColor = typedArray.getColor(R.styleable.AwesomeFab_shadowColor, 0xd3d3d3);
 
         mRipple.setRippleColor(mRippleColor);
         mSrc.setImageDrawable(mBeforeDrawable);
+        mShadow.setColorFilter(mShadowColor);
         typedArray.recycle();
     }
 
