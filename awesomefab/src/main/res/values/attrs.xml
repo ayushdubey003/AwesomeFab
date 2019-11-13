@@ -7,5 +7,6 @@
         <attr name="afterClickSrc" format="reference"></attr>
         <attr name="rippleColor" format="color"></attr>
         <attr name="shadowColor" format="color"></attr>
+        <attr name="menuType" format="integer"></attr>
     </declare-styleable>
 </resources>

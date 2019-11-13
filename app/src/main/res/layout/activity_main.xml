@@ -16,7 +16,8 @@
         app:afterClickSrc="@drawable/ic_location_off_black_24dp"
         app:beforeClickSrc="@drawable/ic_location_on_black_24dp"
         app:fabColor="#fff"
-        app:rippleColor="#a9a9a9"></com.ayush.awesomefab.AwesomeFab>
+        app:menuType="1"
+        app:rippleColor="#00ffaa"></com.ayush.awesomefab.AwesomeFab>
 
     <com.ayush.awesomefab.AwesomeFab
         android:id="@+id/fab_mini"
@@ -25,7 +26,6 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentBottom="true"
         android:layout_margin="16dp"
-        app:afterClickSrc="@drawable/ic_location_off_black_24dp"
         app:beforeClickSrc="@drawable/ic_location_on_black_24dp"
         app:fabColor="#000"
         app:shadowColor="#ff0000"

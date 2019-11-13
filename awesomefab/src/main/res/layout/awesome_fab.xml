@@ -1,43 +1,78 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/relative_layout"
-    android:layout_width="56dp"
-    android:layout_height="56dp"
-    android:clickable="true">
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/relative_layout_main"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center"
+    android:clickable="true"
+    android:focusable="true">
 
-    <ImageView
-        android:id="@+id/shadow"
-        android:layout_width="56dp"
-        android:layout_height="56dp"
-        android:src="@drawable/ring" />
-
-    <com.balysv.materialripple.MaterialRippleLayout
-        android:id="@+id/ripple"
-        android:layout_width="56dp"
-        android:layout_height="56dp"
-        android:layout_centerInParent="true"
-        android:clickable="true"
-        app:mrl_rippleAlpha="0.26"
-        app:mrl_rippleColor="#42ffffff"
-        app:mrl_rippleOverlay="true"
-        app:mrl_rippleRoundedCorners="56dp">
+    <RelativeLayout
+        android:id="@+id/relative_layout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
 
         <ImageView
-            android:id="@+id/view"
+            android:id="@+id/shadow"
             android:layout_width="56dp"
             android:layout_height="56dp"
-            android:clickable="true"
-            android:src="@drawable/background" />
+            android:src="@drawable/ring" />
 
-    </com.balysv.materialripple.MaterialRippleLayout>
+        <com.balysv.materialripple.MaterialRippleLayout
+            android:id="@+id/ripple"
+            android:layout_width="56dp"
+            android:layout_height="56dp"
+            android:layout_centerInParent="true"
+            android:clickable="true"
+            android:elevation="6dp"
+            app:mrl_rippleAlpha="0.26"
+            app:mrl_rippleColor="#42ffffff"
+            app:mrl_rippleOverlay="true"
+            app:mrl_rippleRoundedCorners="56dp">
+
+            <ImageView
+                android:id="@+id/view"
+                android:layout_width="56dp"
+                android:layout_height="56dp"
+                android:clickable="true"
+                android:src="@drawable/background" />
+
+        </com.balysv.materialripple.MaterialRippleLayout>
+
+
+        <com.balysv.materialripple.MaterialRippleLayout
+            android:id="@+id/rip"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_centerInParent="true"
+            android:clickable="true"
+            android:elevation="6dp"
+            app:mrl_rippleAlpha="0.26"
+            app:mrl_rippleColor="#42ffffff"
+            app:mrl_rippleOverlay="true"
+            app:mrl_rippleRoundedCorners="24dp">
+
+            <ImageView
+                android:id="@+id/source_drawable"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_centerInParent="true"
+                android:clickable="true"
+                android:elevation="6dp"
+                tools:src="@drawable/ic_remove_black_24dp" />
+
+        </com.balysv.materialripple.MaterialRippleLayout>
+    </RelativeLayout>
+
 
     <ImageView
-        android:id="@+id/source_drawable"
-        android:layout_width="24dp"
-        android:layout_height="24dp"
+        android:id="@+id/img"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toLeftOf="@id/relative_layout"
         android:layout_centerInParent="true"
-        android:clickable="true"
-        android:scaleType="centerCrop"
-        android:src="@drawable/ic_remove_black_24dp" />
+        tools:src="@drawable/ic_remove_black_24dp" />
+
 </RelativeLayout>
