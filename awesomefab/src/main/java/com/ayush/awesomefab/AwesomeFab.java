@@ -13,6 +13,9 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
+import java.util.ArrayList;
+import java.util.Stack;
+
 public class AwesomeFab extends RelativeLayout implements View.OnClickListener {
 
     private Context mContext;
@@ -34,6 +37,9 @@ public class AwesomeFab extends RelativeLayout implements View.OnClickListener {
     private int mMenuType;
     private boolean mToggle;
     private RelativeLayout mRelativeLayoutMain;
+    private ArrayList<Integer> mChildrenId;
+    private Stack<Integer> mChild;
+    private static ArrayList<AwesomeFabMenu> mMenuList;
 
     public AwesomeFab(Context context) {
         super(context);
@@ -70,6 +76,12 @@ public class AwesomeFab extends RelativeLayout implements View.OnClickListener {
 
         if (mUseMini) {
             int px = (int) convertDpToPixel(42, mContext);
+
+            layoutParams = mRelativeLayoutMain.getLayoutParams();
+            layoutParams.height = px;
+            layoutParams.width = px;
+            mRelativeLayoutMain.setLayoutParams(layoutParams);
+
             layoutParams = mRelativeLayout.getLayoutParams();
             layoutParams.height = px;
             layoutParams.width = px;
@@ -126,6 +138,10 @@ public class AwesomeFab extends RelativeLayout implements View.OnClickListener {
         mShadow = findViewById(R.id.shadow);
         mToggle = false;
         mRelativeLayoutMain = findViewById(R.id.relative_layout_main);
+        mChildrenId = new ArrayList<>();
+        mChild = new Stack<>();
+        mChild.push(R.id.relative_layout_main);
+        mMenuList = new ArrayList<>();
     }
 
     private void setUpFab() {
@@ -159,21 +175,34 @@ public class AwesomeFab extends RelativeLayout implements View.OnClickListener {
                     Toast.makeText(mContext, "Linear", Toast.LENGTH_LONG).show();
                 else
                     Toast.makeText(mContext, "Radial", Toast.LENGTH_LONG).show();
-//
-//                RelativeLayout.LayoutParams lprams = new RelativeLayout.LayoutParams(
-//                        RelativeLayout.LayoutParams.WRAP_CONTENT,
-//                        RelativeLayout.LayoutParams.WRAP_CONTENT);
-//                lprams.addRule(RelativeLayout.LEFT_OF, mRelativeLayout);
-//                ImageView imageView = new ImageView(mContext);
-//                imageView.setLayoutParams(lprams);
-//
-//                imageView.setImageDrawable(mBeforeDrawable);
-//                mRelativeLayoutMain.addView(imageView);
+
+                ViewGroup.LayoutParams layoutParams = mRelativeLayoutMain.getLayoutParams();
+                layoutParams.height = layoutParams.height + (int) convertDpToPixel(32, mContext);
+
+                RelativeLayout.LayoutParams lprams = new RelativeLayout.LayoutParams(
+                        (int) convertDpToPixel(16, mContext),
+                        (int) convertDpToPixel(16, mContext));
+
+                lprams.setMargins(0, 0, (int) convertDpToPixel(8, mContext), (int) convertDpToPixel(16, mContext));
+                lprams.addRule(RelativeLayout.ABOVE, mRelativeLayout.getId());
+                lprams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
+                ImageView imageView = new ImageView(mContext);
+                imageView.setLayoutParams(lprams);
+                imageView.setId(View.generateViewId());
+                mChildrenId.add(imageView.getId());
+                imageView.setImageDrawable(mBeforeDrawable);
+                mRelativeLayoutMain.addView(imageView);
+                Log.e(LOG_TAG, mMenuList.size() + " ");
             } else {
                 mToggle = false;
                 mSrc.setImageDrawable(mBeforeDrawable);
+                for (int i = 0; i < mChildrenId.size(); i++)
+                    findViewById(mChildrenId.get(i)).setVisibility(GONE);
             }
         }
     }
 
+    public void inflateMenu(String label, Drawable drawable) {
+        mMenuList.add(new AwesomeFabMenu(label, drawable));
+    }
 }
