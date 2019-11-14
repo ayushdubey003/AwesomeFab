@@ -99,6 +99,7 @@ public class AwesomeFab extends RelativeLayout implements View.OnClickListener {
         if (mSrc != null)
             mSrc.setOnClickListener(this);
 
+        //Material UI used which sets mini fab size to 40dp
         if (mUseMini) {
             int px = (int) convertDpToPixel(42, mContext);
 
@@ -169,6 +170,7 @@ public class AwesomeFab extends RelativeLayout implements View.OnClickListener {
         mLinearBottom = findViewById(R.id.linear_bottom);
     }
 
+    //Gathering user-defined styles from attributes
     private void setUpFab() throws Exception {
         TypedArray typedArray = mContext.obtainStyledAttributes(mAttributeSet, R.styleable.AwesomeFab, mStyleAttr, 0);
         mUseMini = typedArray.getBoolean(R.styleable.AwesomeFab_useMini, false);
@@ -184,6 +186,8 @@ public class AwesomeFab extends RelativeLayout implements View.OnClickListener {
         mAlignFabTowards = typedArray.getInt(R.styleable.AwesomeFab_alignFabTowards, 0);
         mId = typedArray.getResourceId(R.styleable.AwesomeFab_id, -1);
         mFabMenuAlignment = typedArray.getInt(R.styleable.AwesomeFab_fabMenuAlignment, 0);
+
+        //The user must pass the app:id parameter otherwise the app throws an error. This is used in case of multiple fab menus used in the same view
         if (mId <= 0)
             throw new Exception("app:id is necessary attribute");
 
@@ -196,7 +200,9 @@ public class AwesomeFab extends RelativeLayout implements View.OnClickListener {
 
     @Override
     public void onClick(View view) {
+
         if (view.getId() == R.id.source_drawable || view.getId() == R.id.view) {
+            //mToggle checks whether the fab menu is inflated or not
             if (!mToggle) {
                 mToggle = true;
                 mSrc.setImageDrawable(mAfterDrawable);
@@ -218,6 +224,8 @@ public class AwesomeFab extends RelativeLayout implements View.OnClickListener {
                         mRelativeLayout.setLayoutParams(layoutParams);
                     }
 
+
+                    //Dynamic inflation of views
                     for (int j = 0; j < mMenuList.size(); j++) {
                         final int i = j;
                         mLinearLayoutMain.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
@@ -284,6 +292,7 @@ public class AwesomeFab extends RelativeLayout implements View.OnClickListener {
             } else {
                 mToggle = false;
                 mSrc.setImageDrawable(mBeforeDrawable);
+
                 for (int i = 0; i < mChildrenId.size(); i++) {
                     Animation fadeOut = AnimationUtils.loadAnimation(mContext, R.anim.fade_out);
                     findViewById(mChildrenId.get(i)).startAnimation(fadeOut);
@@ -292,6 +301,7 @@ public class AwesomeFab extends RelativeLayout implements View.OnClickListener {
                     else
                         mLinearBottom.removeView(findViewById(mChildrenId.get(i)));
                 }
+                
                 mChildrenId = new ArrayList<>();
             }
         } else {
