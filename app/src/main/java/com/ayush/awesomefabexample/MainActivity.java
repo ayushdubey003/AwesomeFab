@@ -25,5 +25,10 @@ public class MainActivity extends AppCompatActivity {
         mAwesomeFab.inflateMenu("Option 4", getDrawable(R.drawable.ic_remove_black_24dp), mAwesomeFab.getId());
 
         mAwesomeFabMini.inflateMenu("Mini", getDrawable(R.drawable.ic_location_off_black_24dp), mAwesomeFabMini.getId());
+        mAwesomeFabMini.inflateMenu("Mini", getDrawable(R.drawable.ic_location_off_black_24dp), mAwesomeFabMini.getId());
+        mAwesomeFabMini.inflateMenu("Mini", getDrawable(R.drawable.ic_location_off_black_24dp), mAwesomeFabMini.getId());
+        mAwesomeFabMini.inflateMenu("Mini", getDrawable(R.drawable.ic_location_off_black_24dp), mAwesomeFabMini.getId());
+        mAwesomeFabMini.inflateMenu("Mini", getDrawable(R.drawable.ic_location_off_black_24dp), mAwesomeFabMini.getId());
+
     }
 }

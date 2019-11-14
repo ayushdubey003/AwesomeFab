@@ -9,5 +9,8 @@
         <attr name="shadowColor" format="color"></attr>
         <attr name="menuType" format="integer"></attr>
         <attr name="id" format="reference"></attr>
+        <attr name="inflateMenuAt" format="integer"></attr>
+        <attr name="alignFabTowards" format="integer"></attr>
+        <attr name="fabMenuAlignment" format="integer"></attr>
     </declare-styleable>
 </resources>

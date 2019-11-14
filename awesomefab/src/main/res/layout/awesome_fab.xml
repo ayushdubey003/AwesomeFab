@@ -1,21 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/relative_layout_main"
+    android:id="@+id/linear_layout_main"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:layout_gravity="center"
     android:clickable="true"
     android:elevation="6dp"
-    android:focusable="true">
+    android:focusable="true"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:id="@+id/linear_top"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+    </LinearLayout>
 
     <RelativeLayout
         android:id="@+id/relative_layout"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentRight="true">
+        android:layout_height="wrap_content">
 
         <ImageView
             android:id="@+id/shadow"
@@ -27,7 +34,6 @@
             android:id="@+id/ripple"
             android:layout_width="56dp"
             android:layout_height="56dp"
-            android:layout_centerInParent="true"
             android:clickable="true"
             android:elevation="6dp"
             app:mrl_rippleAlpha="0.26"
@@ -69,5 +75,9 @@
         </com.balysv.materialripple.MaterialRippleLayout>
     </RelativeLayout>
 
-
-</RelativeLayout>
+    <LinearLayout
+        android:id="@+id/linear_bottom"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"></LinearLayout>
+</LinearLayout>

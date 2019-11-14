@@ -15,9 +15,12 @@
         android:layout_alignParentBottom="true"
         android:layout_margin="16dp"
         app:afterClickSrc="@drawable/ic_location_off_black_24dp"
+        app:alignFabTowards="1"
         app:beforeClickSrc="@drawable/ic_location_on_black_24dp"
         app:fabColor="#fff"
+        app:fabMenuAlignment="1"
         app:id="@id/fab"
+        app:inflateMenuAt="0"
         app:rippleColor="#00ffaa"></com.ayush.awesomefab.AwesomeFab>
 
     <com.ayush.awesomefab.AwesomeFab
@@ -27,9 +30,11 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentBottom="true"
         android:layout_margin="16dp"
+        app:alignFabTowards="0"
         app:beforeClickSrc="@drawable/ic_location_on_black_24dp"
         app:fabColor="#000"
         app:id="@id/fab_mini"
+        app:inflateMenuAt="0"
         app:shadowColor="#ff0000"
         app:useMini="true"></com.ayush.awesomefab.AwesomeFab>
 </RelativeLayout>

@@ -11,10 +11,12 @@ import android.util.AttributeSet;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.util.Pair;
+import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -26,6 +28,7 @@ import androidx.cardview.widget.CardView;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Stack;
+import java.util.concurrent.TimeUnit;
 
 public class AwesomeFab extends RelativeLayout implements View.OnClickListener {
 
@@ -47,12 +50,16 @@ public class AwesomeFab extends RelativeLayout implements View.OnClickListener {
     private int mShadowColor;
     private int mMenuType;
     private boolean mToggle;
-    private RelativeLayout mRelativeLayoutMain;
+    private LinearLayout mLinearLayoutMain;
     private ArrayList<Integer> mChildrenId;
-    private Stack<Integer> mChild;
     private int mId;
     private HashMap<Integer, ArrayList<AwesomeFabMenu>> mHashmap;
     private ArrayList<AwesomeFabMenu> mMenuList;
+    private LinearLayout mLinearTop;
+    private LinearLayout mLinearBottom;
+    private int mInflateMenuAt;
+    private int mAlignFabTowards;
+    private int mFabMenuAlignment;
 
     public AwesomeFab(Context context) throws Exception {
         super(context);
@@ -90,10 +97,10 @@ public class AwesomeFab extends RelativeLayout implements View.OnClickListener {
         if (mUseMini) {
             int px = (int) convertDpToPixel(42, mContext);
 
-            layoutParams = mRelativeLayoutMain.getLayoutParams();
+            layoutParams = mLinearLayoutMain.getLayoutParams();
             layoutParams.height = px;
             layoutParams.width = px;
-            mRelativeLayoutMain.setLayoutParams(layoutParams);
+            mLinearLayoutMain.setLayoutParams(layoutParams);
 
             layoutParams = mRelativeLayout.getLayoutParams();
             layoutParams.height = px;
@@ -150,11 +157,11 @@ public class AwesomeFab extends RelativeLayout implements View.OnClickListener {
         mRipple = findViewById(R.id.ripple);
         mShadow = findViewById(R.id.shadow);
         mToggle = false;
-        mRelativeLayoutMain = findViewById(R.id.relative_layout_main);
+        mLinearLayoutMain = findViewById(R.id.linear_layout_main);
         mChildrenId = new ArrayList<>();
-        mChild = new Stack<>();
-        mChild.push(R.id.relative_layout);
         mHashmap = new HashMap<>();
+        mLinearTop = findViewById(R.id.linear_top);
+        mLinearBottom = findViewById(R.id.linear_bottom);
     }
 
     private void setUpFab() throws Exception {
@@ -168,7 +175,10 @@ public class AwesomeFab extends RelativeLayout implements View.OnClickListener {
             mAfterDrawable = mBeforeDrawable;
         mShadowColor = typedArray.getColor(R.styleable.AwesomeFab_shadowColor, 0xd3d3d3);
         mMenuType = typedArray.getInt(R.styleable.AwesomeFab_menuType, 0);
+        mInflateMenuAt = typedArray.getInt(R.styleable.AwesomeFab_inflateMenuAt, 0);
+        mAlignFabTowards = typedArray.getInt(R.styleable.AwesomeFab_alignFabTowards, 0);
         mId = typedArray.getResourceId(R.styleable.AwesomeFab_id, -1);
+        mFabMenuAlignment = typedArray.getInt(R.styleable.AwesomeFab_fabMenuAlignment, 0);
         if (mId <= 0)
             throw new Exception("app:id is necessary attribute");
 
@@ -189,73 +199,81 @@ public class AwesomeFab extends RelativeLayout implements View.OnClickListener {
                 TextView textView = null;
                 if (mMenuType == 0) {
                     mMenuList = mHashmap.get(mId);
+
                     if (mMenuList == null)
                         mMenuList = new ArrayList<>();
 
-                    Log.e(LOG_TAG, mMenuList.size() + "");
+                    if (mAlignFabTowards == 0) {
+                        LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) mRelativeLayout.getLayoutParams();
+                        layoutParams.gravity = Gravity.LEFT;
+                        mRelativeLayout.setLayoutParams(layoutParams);
+                    } else {
+                        LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) mRelativeLayout.getLayoutParams();
+                        layoutParams.gravity = Gravity.RIGHT;
+                        mRelativeLayout.setLayoutParams(layoutParams);
+                    }
+
                     for (int j = 0; j < mMenuList.size(); j++) {
                         final int i = j;
-                        new Handler().postDelayed(new Runnable() {
-                            @Override
-                            public void run() {
-                                int id = mChild.peek();
+                        mLinearLayoutMain.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
 
-                                RelativeLayout relativeLayout = new RelativeLayout(mContext);
-                                relativeLayout.setId(View.generateViewId());
-                                RelativeLayout.LayoutParams lprams = new RelativeLayout.LayoutParams(
-                                        LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
-                                lprams.addRule(RelativeLayout.ABOVE, id);
-                                lprams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
-                                lprams.setMargins((int) convertDpToPixel(16, mContext), 0, (int) convertDpToPixel(8, mContext), (int) convertDpToPixel(16, mContext));
-                                relativeLayout.setLayoutParams(lprams);
+                        LinearLayout linearLayout = new LinearLayout(mContext);
+                        linearLayout.setId(View.generateViewId());
+                        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+                        linearLayout.setLayoutParams(layoutParams);
+                        linearLayout.setOrientation(LinearLayout.HORIZONTAL);
 
-                                LinearLayout linearLayout = new LinearLayout(mContext);
-                                linearLayout.setId(View.generateViewId());
-                                LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
-                                linearLayout.setLayoutParams(layoutParams);
-                                linearLayout.setOrientation(LinearLayout.HORIZONTAL);
+                        LinearLayout.LayoutParams tvLp = new LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+                        CardView cardView = new CardView(mContext);
+                        cardView.setCardElevation(convertDpToPixel(6, mContext));
+                        cardView.setRadius((int) convertDpToPixel(2, mContext));
+                        cardView.setPadding((int) convertDpToPixel(8, mContext), (int) convertDpToPixel(4, mContext), (int) convertDpToPixel(8, mContext), (int) convertDpToPixel(4, mContext));
+                        tvLp.setMargins((int) convertDpToPixel(8, mContext), 0, (int) convertDpToPixel(8, mContext), 0);
 
-                                LayoutParams tvLp = new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
-                                CardView cardView = new CardView(mContext);
-                                cardView.setCardElevation(convertDpToPixel(6, mContext));
-                                cardView.setRadius((int) convertDpToPixel(2, mContext));
-                                cardView.setPadding((int) convertDpToPixel(4, mContext), (int) convertDpToPixel(4, mContext), (int) convertDpToPixel(4, mContext), (int) convertDpToPixel(4, mContext));
-                                tvLp.setMargins((int) convertDpToPixel(4, mContext), 0, (int) convertDpToPixel(8, mContext), 0);
-                                cardView.setForegroundGravity(CENTER_IN_PARENT);
-                                cardView.setLayoutParams(tvLp);
+                        tvLp.gravity = CENTER_IN_PARENT;
+                        cardView.setLayoutParams(tvLp);
 
-                                TextView label = new TextView(mContext);
-                                label.setText(mMenuList.get(i).getmLabel());
-                                label.setGravity(CENTER_VERTICAL);
-                                label.setLayoutParams(tvLp);
+                        TextView label = new TextView(mContext);
+                        label.setText(mMenuList.get(i).getmLabel());
+                        label.setGravity(CENTER_VERTICAL);
+                        label.setLayoutParams(tvLp);
 
-                                ImageView icon = new ImageView(mContext);
-                                icon.setImageDrawable(mMenuList.get(i).getmDrawable());
-                                icon.setPadding((int) convertDpToPixel(4, mContext), (int) convertDpToPixel(4, mContext), (int) convertDpToPixel(4, mContext), (int) convertDpToPixel(4, mContext));
+                        ImageView icon = new ImageView(mContext);
+                        icon.setImageDrawable(mMenuList.get(i).getmDrawable());
+                        icon.setPadding((int) convertDpToPixel(4, mContext), (int) convertDpToPixel(4, mContext), (int) convertDpToPixel(4, mContext), (int) convertDpToPixel(4, mContext));
 
-                                cardView.addView(label);
-                                linearLayout.addView(cardView);
-                                linearLayout.addView(icon);
-                                linearLayout.setEnabled(true);
+                        cardView.addView(label);
 
-                                relativeLayout.addView(linearLayout);
-                                mRelativeLayoutMain.addView(relativeLayout);
-                                Animation fadeIn = AnimationUtils.loadAnimation(mContext, R.anim.fade_in);
-                                relativeLayout.startAnimation(fadeIn);
+                        if (mFabMenuAlignment == 0) {
+                            linearLayout.addView(cardView);
+                            linearLayout.addView(icon);
+                        } else {
+                            linearLayout.addView(icon);
+                            linearLayout.addView(cardView);
+                        }
 
-                                GradientDrawable bg = new GradientDrawable();
-                                bg.setShape(GradientDrawable.OVAL);
-                                bg.setColor(mFabcolor);
-                                int radius = (int) convertDpToPixel(icon.getLayoutParams().height, mContext);
-                                icon.setBackground(bg);
 
-                                mChild.pop();
-                                mChildrenId.add(relativeLayout.getId());
-                                mChild.push(relativeLayout.getId());
-                            }
-                        }, 500);
+                        linearLayout.setEnabled(true);
+                        LayoutParams llp = new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+                        llp.setMargins(0, 0, 0, (int) convertDpToPixel(8, mContext));
+                        linearLayout.setLayoutParams(llp);
 
+
+                        Animation fadeIn = AnimationUtils.loadAnimation(mContext, R.anim.fade_in);
+                        linearLayout.startAnimation(fadeIn);
+                        if (mInflateMenuAt == 0)
+                            mLinearTop.addView(linearLayout);
+                        else
+                            mLinearBottom.addView(linearLayout);
+
+                        GradientDrawable bg = new GradientDrawable();
+                        bg.setShape(GradientDrawable.OVAL);
+                        bg.setColor(mFabcolor);
+                        icon.setBackground(bg);
+
+                        mChildrenId.add(linearLayout.getId());
                     }
+
                 } else
                     Toast.makeText(mContext, "Radial", Toast.LENGTH_LONG).show();
 
@@ -265,13 +283,15 @@ public class AwesomeFab extends RelativeLayout implements View.OnClickListener {
                 for (int i = 0; i < mChildrenId.size(); i++) {
                     Animation fadeOut = AnimationUtils.loadAnimation(mContext, R.anim.fade_out);
                     findViewById(mChildrenId.get(i)).startAnimation(fadeOut);
-                    mRelativeLayoutMain.removeView(findViewById(mChildrenId.get(i)));
+                    if (mInflateMenuAt == 0)
+                        mLinearTop.removeView(findViewById(mChildrenId.get(i)));
+                    else
+                        mLinearBottom.removeView(findViewById(mChildrenId.get(i)));
                 }
                 mChildrenId.clear();
-                mChild.pop();
-                mChild.push(R.id.relative_layout);
             }
         }
+
     }
 
     public void inflateMenu(String label, Drawable drawable, int id) {
@@ -280,7 +300,5 @@ public class AwesomeFab extends RelativeLayout implements View.OnClickListener {
             arrayList = new ArrayList<>();
         arrayList.add(new AwesomeFabMenu(label, drawable));
         mHashmap.put(id, arrayList);
-//        mView.performClick();
-//        mView.performClick();
     }
 }
