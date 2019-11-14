@@ -2,6 +2,7 @@ package com.ayush.awesomefab;
 
 import android.content.Context;
 import android.content.res.TypedArray;
+import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
 import android.util.AttributeSet;
@@ -11,6 +12,7 @@ import android.util.Pair;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -40,8 +42,8 @@ public class AwesomeFab extends RelativeLayout implements View.OnClickListener {
     private int mMenuType;
     private boolean mToggle;
     private RelativeLayout mRelativeLayoutMain;
-    private ArrayList<Pair<Integer, Integer>> mChildrenId;
-    private Stack<Pair<Integer, Integer>> mChild;
+    private ArrayList<Integer> mChildrenId;
+    private Stack<Integer> mChild;
     private int mId;
     private HashMap<Integer, ArrayList<AwesomeFabMenu>> mHashmap;
 
@@ -144,7 +146,7 @@ public class AwesomeFab extends RelativeLayout implements View.OnClickListener {
         mRelativeLayoutMain = findViewById(R.id.relative_layout_main);
         mChildrenId = new ArrayList<>();
         mChild = new Stack<>();
-        mChild.push(new Pair<>(R.id.relative_layout, R.id.relative_layout));
+        mChild.push(R.id.relative_layout);
         mHashmap = new HashMap<>();
     }
 
@@ -182,43 +184,52 @@ public class AwesomeFab extends RelativeLayout implements View.OnClickListener {
                     ArrayList<AwesomeFabMenu> mMenuList = mHashmap.get(mId);
                     if (mMenuList == null)
                         mMenuList = new ArrayList<>();
-                    Log.e(LOG_TAG, mMenuList.size() + " ");
+
+                    Log.e(LOG_TAG, mMenuList.size() + "");
                     for (int i = 0; i < mMenuList.size(); i++) {
-                        Pair<Integer, Integer> p = mChild.peek();
-                        if (mMenuList.get(i).getmDrawable() != null) {
-                            ViewGroup.LayoutParams layoutParams = mRelativeLayoutMain.getLayoutParams();
-                            layoutParams.height = layoutParams.height + (int) convertDpToPixel(32, mContext);
+                        int id = mChild.peek();
 
-                            RelativeLayout.LayoutParams lprams = new RelativeLayout.LayoutParams(
-                                    (int) convertDpToPixel(16, mContext),
-                                    (int) convertDpToPixel(16, mContext));
+                        RelativeLayout relativeLayout = new RelativeLayout(mContext);
+                        relativeLayout.setId(View.generateViewId());
+                        RelativeLayout.LayoutParams lprams = new RelativeLayout.LayoutParams(
+                                LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+                        lprams.addRule(RelativeLayout.ABOVE, id);
+                        lprams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
+                        lprams.setMargins((int) convertDpToPixel(16, mContext), 0, (int) convertDpToPixel(8, mContext), (int) convertDpToPixel(16, mContext));
+                        relativeLayout.setLayoutParams(lprams);
 
-                            lprams.setMargins((int) convertDpToPixel(16, mContext), 0, (int) convertDpToPixel(8, mContext), (int) convertDpToPixel(16, mContext));
-                            lprams.addRule(RelativeLayout.ABOVE, p.first);
-                            lprams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
-                            imageView = new ImageView(mContext);
-                            imageView.setLayoutParams(lprams);
-                            imageView.setId(View.generateViewId());
-                            imageView.setImageDrawable(mMenuList.get(i).getmDrawable());
-                            mRelativeLayoutMain.addView(imageView);
-                        }
-//                        if (mMenuList.get(i).getmLabel() != null) {
-//                            RelativeLayout.LayoutParams textlprams = new RelativeLayout.LayoutParams(
-//                                    RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
-//                            textlprams.addRule(RelativeLayout.LEFT_OF, imageView.getId());
-//                            textlprams.addRule(RelativeLayout.ABOVE, p.second);
-//                            textlprams.setMargins(0, 0, 0, (int) convertDpToPixel(16, mContext));
-//                            textView = new TextView(mContext);
-//                            //textView.setPadding((int) convertDpToPixel(8, mContext), 0, (int) convertDpToPixel(8, mContext), (int) convertDpToPixel(8, mContext));
-//                            textView.setLayoutParams(textlprams);
-//                            textView.setText(mMenuList.get(i).getmLabel());
-//                            textView.setId(View.generateViewId());
-//                            mRelativeLayoutMain.addView(textView);
-//                        }
+                        LinearLayout linearLayout = new LinearLayout(mContext);
+                        linearLayout.setId(View.generateViewId());
+                        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+                        linearLayout.setLayoutParams(layoutParams);
+                        linearLayout.setOrientation(LinearLayout.HORIZONTAL);
+
+                        TextView label = new TextView(mContext);
+                        label.setText(mMenuList.get(i).getmLabel());
+                        LayoutParams tvLp = new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+                        tvLp.setMargins((int) convertDpToPixel(8, mContext), 0, (int) convertDpToPixel(16, mContext), 0);
+                        label.setGravity(CENTER_VERTICAL);
+                        label.setLayoutParams(tvLp);
+
+                        ImageView icon = new ImageView(mContext);
+                        icon.setImageDrawable(mMenuList.get(i).getmDrawable());
+                        icon.setPadding((int) convertDpToPixel(4, mContext), (int) convertDpToPixel(4, mContext), (int) convertDpToPixel(4, mContext), (int) convertDpToPixel(4, mContext));
+
+                        linearLayout.addView(label);
+                        linearLayout.addView(icon);
+
+                        relativeLayout.addView(linearLayout);
+                        mRelativeLayoutMain.addView(relativeLayout);
+
+                        GradientDrawable bg = new GradientDrawable();
+                        bg.setShape(GradientDrawable.OVAL);
+                        bg.setColor(mFabcolor);
+                        int radius = (int) convertDpToPixel(icon.getLayoutParams().height, mContext);
+                        icon.setBackground(bg);
 
                         mChild.pop();
-                        mChildrenId.add(new Pair<>(imageView.getId(), imageView.getId()));
-                        mChild.push(new Pair<>(imageView.getId(), imageView.getId()));
+                        mChildrenId.add(relativeLayout.getId());
+                        mChild.push(relativeLayout.getId());
                     }
                 } else
                     Toast.makeText(mContext, "Radial", Toast.LENGTH_LONG).show();
@@ -226,13 +237,11 @@ public class AwesomeFab extends RelativeLayout implements View.OnClickListener {
             } else {
                 mToggle = false;
                 mSrc.setImageDrawable(mBeforeDrawable);
-                for (int i = 0; i < mChildrenId.size(); i++) {
-                    mRelativeLayoutMain.removeView(findViewById(mChildrenId.get(i).first));
-                    mRelativeLayoutMain.removeView(findViewById(mChildrenId.get(i).second));
-                }
+                for (int i = 0; i < mChildrenId.size(); i++)
+                    mRelativeLayoutMain.removeView(findViewById(mChildrenId.get(i)));
                 mChildrenId.clear();
                 mChild.pop();
-                mChild.push(new Pair<>(R.id.relative_layout, R.id.relative_layout));
+                mChild.push(R.id.relative_layout);
             }
         }
     }
@@ -243,7 +252,7 @@ public class AwesomeFab extends RelativeLayout implements View.OnClickListener {
             arrayList = new ArrayList<>();
         arrayList.add(new AwesomeFabMenu(label, drawable));
         mHashmap.put(id, arrayList);
-        mView.performClick();
-        mView.performClick();
+//        mView.performClick();
+//        mView.performClick();
     }
 }

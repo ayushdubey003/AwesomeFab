@@ -7,14 +7,15 @@
     android:layout_height="wrap_content"
     android:layout_gravity="center"
     android:clickable="true"
+    android:elevation="6dp"
     android:focusable="true">
 
     <RelativeLayout
         android:id="@+id/relative_layout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentBottom="true">
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true">
 
         <ImageView
             android:id="@+id/shadow"
