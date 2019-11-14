@@ -20,6 +20,11 @@
 > Option to inflate menu to FAB
 > Fully customizable placing of FAB icons and label
 
+# Demo
+
+![Imgur](https://i.imgur.com/LoiedRn.gifv)
+
+
 # Usage
 
 - Add it in your root `build.gradle` at the end of repositories:
