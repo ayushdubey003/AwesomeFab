@@ -66,5 +66,4 @@ Add the `com.ayush.awesomefab.AwesomeFab` to your layout XML file.
         mAwesomeFab.inflateMenu("Option 2", getDrawable(R.drawable.ic_location_on_black_24dp), mAwesomeFab.getId());
         mAwesomeFab.inflateMenu("Option 3", getDrawable(R.drawable.ic_remove_black_24dp), mAwesomeFab.getId());
         mAwesomeFab.inflateMenu("Option 4", getDrawable(R.drawable.ic_remove_black_24dp), mAwesomeFab.getId());
-        ```
-        
+   ```
