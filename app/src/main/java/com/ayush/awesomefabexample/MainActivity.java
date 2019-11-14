@@ -17,7 +17,6 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         mAwesomeFab = findViewById(R.id.fab);
-        Log.e("X", "" + mAwesomeFab.getId());
         mAwesomeFab.inflateMenu("Hi", getDrawable(R.drawable.ic_location_off_black_24dp), mAwesomeFab.getId());
         mAwesomeFab.inflateMenu("Hey", getDrawable(R.drawable.ic_location_on_black_24dp), mAwesomeFab.getId());
         mAwesomeFab.inflateMenu("Bro", getDrawable(R.drawable.ic_remove_black_24dp), mAwesomeFab.getId());

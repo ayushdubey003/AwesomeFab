@@ -160,10 +160,9 @@ public class AwesomeFab extends RelativeLayout implements View.OnClickListener {
         mShadowColor = typedArray.getColor(R.styleable.AwesomeFab_shadowColor, 0xd3d3d3);
         mMenuType = typedArray.getInt(R.styleable.AwesomeFab_menuType, 0);
         mId = typedArray.getResourceId(R.styleable.AwesomeFab_id, -1);
-        if (mId == -1)
+        if (mId <= 0)
             throw new Exception("app:id is necessary attribute");
 
-        Log.e(LOG_TAG, "" + mId);
         mView.setColorFilter(mFabcolor);
         mRipple.setRippleColor(mRippleColor);
         mSrc.setImageDrawable(mBeforeDrawable);
@@ -174,8 +173,6 @@ public class AwesomeFab extends RelativeLayout implements View.OnClickListener {
     @Override
     public void onClick(View view) {
         if (view.getId() == R.id.source_drawable || view.getId() == R.id.view) {
-            Log.e(LOG_TAG, mId + " ");
-            Log.e(LOG_TAG, "" + view.getId());
             if (!mToggle) {
                 mToggle = true;
                 mSrc.setImageDrawable(mAfterDrawable);
@@ -202,8 +199,6 @@ public class AwesomeFab extends RelativeLayout implements View.OnClickListener {
                             imageView = new ImageView(mContext);
                             imageView.setLayoutParams(lprams);
                             imageView.setId(View.generateViewId());
-                            //imageView.setBackground(mCircle);
-
                             imageView.setImageDrawable(mMenuList.get(i).getmDrawable());
                             mRelativeLayoutMain.addView(imageView);
                         }
@@ -248,5 +243,7 @@ public class AwesomeFab extends RelativeLayout implements View.OnClickListener {
             arrayList = new ArrayList<>();
         arrayList.add(new AwesomeFabMenu(label, drawable));
         mHashmap.put(id, arrayList);
+        mView.performClick();
+        mView.performClick();
     }
 }
