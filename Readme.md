@@ -22,7 +22,7 @@
 
 # Demo
 
-![Imgur](https://i.imgur.com/LoiedRn.gifv)
+!![](gif.gif)
 
 
 # Usage

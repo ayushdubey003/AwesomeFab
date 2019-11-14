@@ -4,7 +4,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#00ff00"
     tools:context=".MainActivity">
 
     <com.ayush.awesomefab.AwesomeFab
@@ -17,7 +16,7 @@
         app:afterClickSrc="@drawable/ic_location_off_black_24dp"
         app:alignFabTowards="1"
         app:beforeClickSrc="@drawable/ic_location_on_black_24dp"
-        app:fabColor="#fff"
+        app:fabColor="#1490D4"
         app:fabMenuAlignment="1"
         app:id="@id/fab"
         app:inflateMenuAt="0"
