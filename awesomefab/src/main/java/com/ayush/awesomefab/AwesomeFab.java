@@ -271,9 +271,10 @@ public class AwesomeFab extends RelativeLayout implements View.OnClickListener {
     private void animateOut(final int i) {
         if (i >= mChildrenId.size()) {
             mChildrenId = new ArrayList<>();
+            mView.setClickable(true);
             return;
         }
-
+        mView.setClickable(false);
         Animation fadeOut = AnimationUtils.loadAnimation(mContext, R.anim.fade_out);
         findViewById(mChildrenId.get(i)).startAnimation(fadeOut);
         if (mInflateMenuAt == 0)
@@ -290,12 +291,15 @@ public class AwesomeFab extends RelativeLayout implements View.OnClickListener {
     }
 
     private void animateIn(final int i) {
-        if (i >= mMenuList.size())
+        if (i >= mMenuList.size()) {
+            mView.setClickable(true);
             return;
+        }
         final AwesomeFab context = this;
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
+                mView.setClickable(false);
                 mLinearLayoutMain.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
 
                 LinearLayout linearLayout = new LinearLayout(mContext);
