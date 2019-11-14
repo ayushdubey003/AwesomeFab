@@ -32,6 +32,10 @@ import java.util.concurrent.TimeUnit;
 
 public class AwesomeFab extends RelativeLayout implements View.OnClickListener {
 
+    public interface FabMenuClickListener {
+        void onFabItemClick(int id, int ind);
+    }
+
     private Context mContext;
     private AttributeSet mAttributeSet;
     private int mStyleAttr;
@@ -60,6 +64,8 @@ public class AwesomeFab extends RelativeLayout implements View.OnClickListener {
     private int mInflateMenuAt;
     private int mAlignFabTowards;
     private int mFabMenuAlignment;
+    private int mIndClicked;
+    private FabMenuClickListener fabMenuClickListener;
 
     public AwesomeFab(Context context) throws Exception {
         super(context);
@@ -81,7 +87,6 @@ public class AwesomeFab extends RelativeLayout implements View.OnClickListener {
         mStyleAttr = defStyleAttr;
         initialize();
     }
-
 
     private void initialize() throws Exception {
         this.mRelativeLayout = this;
@@ -218,7 +223,7 @@ public class AwesomeFab extends RelativeLayout implements View.OnClickListener {
                         mLinearLayoutMain.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
 
                         LinearLayout linearLayout = new LinearLayout(mContext);
-                        linearLayout.setId(View.generateViewId());
+                        linearLayout.setId(i + 1);
                         LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
                         linearLayout.setLayoutParams(layoutParams);
                         linearLayout.setOrientation(LinearLayout.HORIZONTAL);
@@ -252,12 +257,10 @@ public class AwesomeFab extends RelativeLayout implements View.OnClickListener {
                             linearLayout.addView(cardView);
                         }
 
-
                         linearLayout.setEnabled(true);
                         LayoutParams llp = new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
                         llp.setMargins(0, 0, 0, (int) convertDpToPixel(8, mContext));
                         linearLayout.setLayoutParams(llp);
-
 
                         Animation fadeIn = AnimationUtils.loadAnimation(mContext, R.anim.fade_in);
                         linearLayout.startAnimation(fadeIn);
@@ -272,6 +275,7 @@ public class AwesomeFab extends RelativeLayout implements View.OnClickListener {
                         icon.setBackground(bg);
 
                         mChildrenId.add(linearLayout.getId());
+                        findViewById(linearLayout.getId()).setOnClickListener(this);
                     }
 
                 } else
@@ -288,7 +292,28 @@ public class AwesomeFab extends RelativeLayout implements View.OnClickListener {
                     else
                         mLinearBottom.removeView(findViewById(mChildrenId.get(i)));
                 }
-                mChildrenId.clear();
+                mChildrenId = new ArrayList<>();
+            }
+        } else {
+            boolean z = false;
+
+            for (int i = 0; i < mChildrenId.size(); i++) {
+                if (view.getId() == mChildrenId.get(i)) {
+                    z = true;
+                    mIndClicked = mChildrenId.get(i);
+                }
+            }
+            if (z) {
+                if (fabMenuClickListener != null) {
+                    Log.e(LOG_TAG, mId + " ");
+                    fabMenuClickListener.onFabItemClick(mId, mIndClicked);
+                }
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        mView.performClick();
+                    }
+                }, 500);
             }
         }
 
@@ -300,5 +325,9 @@ public class AwesomeFab extends RelativeLayout implements View.OnClickListener {
             arrayList = new ArrayList<>();
         arrayList.add(new AwesomeFabMenu(label, drawable));
         mHashmap.put(id, arrayList);
+    }
+
+    public void setFabMenuClickListener(FabMenuClickListener listener) {
+        this.fabMenuClickListener = listener;
     }
 }

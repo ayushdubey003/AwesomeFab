@@ -5,10 +5,11 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.Toast;
 
 import com.ayush.awesomefab.AwesomeFab;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements AwesomeFab.FabMenuClickListener {
 
     private AwesomeFab mAwesomeFab;
     private AwesomeFab mAwesomeFabMini;
@@ -30,5 +31,12 @@ public class MainActivity extends AppCompatActivity {
         mAwesomeFabMini.inflateMenu("Mini", getDrawable(R.drawable.ic_location_off_black_24dp), mAwesomeFabMini.getId());
         mAwesomeFabMini.inflateMenu("Mini", getDrawable(R.drawable.ic_location_off_black_24dp), mAwesomeFabMini.getId());
 
+        mAwesomeFab.setFabMenuClickListener((AwesomeFab.FabMenuClickListener) this);
+        mAwesomeFabMini.setFabMenuClickListener((AwesomeFab.FabMenuClickListener) this);
+    }
+
+    @Override
+    public void onFabItemClick(int id, int ind) {
+        Toast.makeText(this, ind + " clicked", Toast.LENGTH_LONG).show();
     }
 }
