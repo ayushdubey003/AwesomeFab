@@ -2,20 +2,26 @@ package com.ayush.awesomefab;
 
 import android.content.Context;
 import android.content.res.TypedArray;
+import android.graphics.Color;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
+import android.os.Handler;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.util.Pair;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.cardview.widget.CardView;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -46,6 +52,7 @@ public class AwesomeFab extends RelativeLayout implements View.OnClickListener {
     private Stack<Integer> mChild;
     private int mId;
     private HashMap<Integer, ArrayList<AwesomeFabMenu>> mHashmap;
+    private ArrayList<AwesomeFabMenu> mMenuList;
 
     public AwesomeFab(Context context) throws Exception {
         super(context);
@@ -181,55 +188,73 @@ public class AwesomeFab extends RelativeLayout implements View.OnClickListener {
                 ImageView imageView = null;
                 TextView textView = null;
                 if (mMenuType == 0) {
-                    ArrayList<AwesomeFabMenu> mMenuList = mHashmap.get(mId);
+                    mMenuList = mHashmap.get(mId);
                     if (mMenuList == null)
                         mMenuList = new ArrayList<>();
 
                     Log.e(LOG_TAG, mMenuList.size() + "");
-                    for (int i = 0; i < mMenuList.size(); i++) {
-                        int id = mChild.peek();
+                    for (int j = 0; j < mMenuList.size(); j++) {
+                        final int i = j;
+                        new Handler().postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                int id = mChild.peek();
 
-                        RelativeLayout relativeLayout = new RelativeLayout(mContext);
-                        relativeLayout.setId(View.generateViewId());
-                        RelativeLayout.LayoutParams lprams = new RelativeLayout.LayoutParams(
-                                LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
-                        lprams.addRule(RelativeLayout.ABOVE, id);
-                        lprams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
-                        lprams.setMargins((int) convertDpToPixel(16, mContext), 0, (int) convertDpToPixel(8, mContext), (int) convertDpToPixel(16, mContext));
-                        relativeLayout.setLayoutParams(lprams);
+                                RelativeLayout relativeLayout = new RelativeLayout(mContext);
+                                relativeLayout.setId(View.generateViewId());
+                                RelativeLayout.LayoutParams lprams = new RelativeLayout.LayoutParams(
+                                        LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+                                lprams.addRule(RelativeLayout.ABOVE, id);
+                                lprams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
+                                lprams.setMargins((int) convertDpToPixel(16, mContext), 0, (int) convertDpToPixel(8, mContext), (int) convertDpToPixel(16, mContext));
+                                relativeLayout.setLayoutParams(lprams);
 
-                        LinearLayout linearLayout = new LinearLayout(mContext);
-                        linearLayout.setId(View.generateViewId());
-                        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
-                        linearLayout.setLayoutParams(layoutParams);
-                        linearLayout.setOrientation(LinearLayout.HORIZONTAL);
+                                LinearLayout linearLayout = new LinearLayout(mContext);
+                                linearLayout.setId(View.generateViewId());
+                                LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+                                linearLayout.setLayoutParams(layoutParams);
+                                linearLayout.setOrientation(LinearLayout.HORIZONTAL);
 
-                        TextView label = new TextView(mContext);
-                        label.setText(mMenuList.get(i).getmLabel());
-                        LayoutParams tvLp = new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
-                        tvLp.setMargins((int) convertDpToPixel(8, mContext), 0, (int) convertDpToPixel(16, mContext), 0);
-                        label.setGravity(CENTER_VERTICAL);
-                        label.setLayoutParams(tvLp);
+                                LayoutParams tvLp = new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+                                CardView cardView = new CardView(mContext);
+                                cardView.setCardElevation(convertDpToPixel(6, mContext));
+                                cardView.setRadius((int) convertDpToPixel(2, mContext));
+                                cardView.setPadding((int) convertDpToPixel(4, mContext), (int) convertDpToPixel(4, mContext), (int) convertDpToPixel(4, mContext), (int) convertDpToPixel(4, mContext));
+                                tvLp.setMargins((int) convertDpToPixel(4, mContext), 0, (int) convertDpToPixel(8, mContext), 0);
+                                cardView.setForegroundGravity(CENTER_IN_PARENT);
+                                cardView.setLayoutParams(tvLp);
 
-                        ImageView icon = new ImageView(mContext);
-                        icon.setImageDrawable(mMenuList.get(i).getmDrawable());
-                        icon.setPadding((int) convertDpToPixel(4, mContext), (int) convertDpToPixel(4, mContext), (int) convertDpToPixel(4, mContext), (int) convertDpToPixel(4, mContext));
+                                TextView label = new TextView(mContext);
+                                label.setText(mMenuList.get(i).getmLabel());
+                                label.setGravity(CENTER_VERTICAL);
+                                label.setLayoutParams(tvLp);
 
-                        linearLayout.addView(label);
-                        linearLayout.addView(icon);
+                                ImageView icon = new ImageView(mContext);
+                                icon.setImageDrawable(mMenuList.get(i).getmDrawable());
+                                icon.setPadding((int) convertDpToPixel(4, mContext), (int) convertDpToPixel(4, mContext), (int) convertDpToPixel(4, mContext), (int) convertDpToPixel(4, mContext));
 
-                        relativeLayout.addView(linearLayout);
-                        mRelativeLayoutMain.addView(relativeLayout);
+                                cardView.addView(label);
+                                linearLayout.addView(cardView);
+                                linearLayout.addView(icon);
+                                linearLayout.setEnabled(true);
 
-                        GradientDrawable bg = new GradientDrawable();
-                        bg.setShape(GradientDrawable.OVAL);
-                        bg.setColor(mFabcolor);
-                        int radius = (int) convertDpToPixel(icon.getLayoutParams().height, mContext);
-                        icon.setBackground(bg);
+                                relativeLayout.addView(linearLayout);
+                                mRelativeLayoutMain.addView(relativeLayout);
+                                Animation fadeIn = AnimationUtils.loadAnimation(mContext, R.anim.fade_in);
+                                relativeLayout.startAnimation(fadeIn);
 
-                        mChild.pop();
-                        mChildrenId.add(relativeLayout.getId());
-                        mChild.push(relativeLayout.getId());
+                                GradientDrawable bg = new GradientDrawable();
+                                bg.setShape(GradientDrawable.OVAL);
+                                bg.setColor(mFabcolor);
+                                int radius = (int) convertDpToPixel(icon.getLayoutParams().height, mContext);
+                                icon.setBackground(bg);
+
+                                mChild.pop();
+                                mChildrenId.add(relativeLayout.getId());
+                                mChild.push(relativeLayout.getId());
+                            }
+                        }, 500);
+
                     }
                 } else
                     Toast.makeText(mContext, "Radial", Toast.LENGTH_LONG).show();
@@ -237,8 +262,11 @@ public class AwesomeFab extends RelativeLayout implements View.OnClickListener {
             } else {
                 mToggle = false;
                 mSrc.setImageDrawable(mBeforeDrawable);
-                for (int i = 0; i < mChildrenId.size(); i++)
+                for (int i = 0; i < mChildrenId.size(); i++) {
+                    Animation fadeOut = AnimationUtils.loadAnimation(mContext, R.anim.fade_out);
+                    findViewById(mChildrenId.get(i)).startAnimation(fadeOut);
                     mRelativeLayoutMain.removeView(findViewById(mChildrenId.get(i)));
+                }
                 mChildrenId.clear();
                 mChild.pop();
                 mChild.push(R.id.relative_layout);
