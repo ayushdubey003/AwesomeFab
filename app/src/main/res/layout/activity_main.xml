@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#00ff00"
     tools:context=".MainActivity">
 
     <com.ayush.awesomefab.AwesomeFab
@@ -16,7 +17,7 @@
         app:afterClickSrc="@drawable/ic_location_off_black_24dp"
         app:beforeClickSrc="@drawable/ic_location_on_black_24dp"
         app:fabColor="#fff"
-        app:menuType="1"
+        app:id="@id/fab"
         app:rippleColor="#00ffaa"></com.ayush.awesomefab.AwesomeFab>
 
     <com.ayush.awesomefab.AwesomeFab
@@ -28,6 +29,7 @@
         android:layout_margin="16dp"
         app:beforeClickSrc="@drawable/ic_location_on_black_24dp"
         app:fabColor="#000"
+        app:id="@id/fab_mini"
         app:shadowColor="#ff0000"
         app:useMini="true"></com.ayush.awesomefab.AwesomeFab>
 </RelativeLayout>
